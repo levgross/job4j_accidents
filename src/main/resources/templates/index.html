@@ -34,7 +34,24 @@
             </div>
         </nav>
     <div class="row">
-
+		<table class="table">
+            <thead>
+            <tr>
+			    <th scope="col">#</th>
+				<th scope="col">Name</th>
+			    <th scope="col">Description</th>
+				<th scope="col">Address</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="accident: ${accidents}" >
+				<td th:text="${accident.id}" />
+				<td th:text="${accident.name}" />
+				<td th:text="${accident.text}" />
+				<td th:text="${accident.address}" />
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 </body>

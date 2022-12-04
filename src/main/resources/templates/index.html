@@ -14,6 +14,7 @@
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <title>Car Accidents</title>
 </head>
@@ -26,10 +27,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link active" th:href="@{/}">Main</a>
-					<a class="nav-item nav-link" >
-						<span th:text="${user}"></span>
-					</a>
+                <a class="nav-item nav-link active" href="#">Main</a>
+                <a class="nav-item nav-link" th:href="@{/index}">Accidents</a>
+                <a class="nav-item nav-link" th:href="@{/createAccident}">Add new accident</a>
                 </div>
             </div>
         </nav>
@@ -45,13 +45,21 @@
             </thead>
             <tbody>
             <tr th:each="accident: ${accidents}" >
-				<td th:text="${accident.id}" />
+				<td>
+					<a th:href="@{|/editAccident/${accident.id}|}">
+					    <i class="fa fa-edit"></i>
+					</a>
+				<span th:text="${accident.id}"></span>
+				</td>
 				<td th:text="${accident.name}" />
 				<td th:text="${accident.text}" />
 				<td th:text="${accident.address}" />
             </tr>
             </tbody>
         </table>
+    </div>
+	<div class="button">
+		<a class="btn btn-primary" th:href="@{/createAccident}" role="button">Add new accident</a>
     </div>
 </div>
 </body>

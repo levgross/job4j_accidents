@@ -11,7 +11,7 @@ import ru.job4j.service.AccidentService;
 public class IndexController {
     private final AccidentService accidentService;
 
-    @GetMapping("/")
+    @GetMapping("/index")
     public String index(Model model) {
         model.addAttribute("user", "Grossevich Lev");
         model.addAttribute("accidents", accidentService.findAll());

@@ -6,6 +6,7 @@ import ru.job4j.model.Accident;
 import ru.job4j.repository.AccidentMem;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -14,5 +15,17 @@ public class AccidentService {
 
     public List<Accident> findAll() {
         return store.findAll();
+    }
+
+    public void create(Accident accident) {
+        store.create(accident);
+    }
+
+    public void update(Accident accident) {
+        store.update(accident);
+    }
+
+    public Optional<Accident> findById(int id) {
+        return store.findById(id);
     }
 }

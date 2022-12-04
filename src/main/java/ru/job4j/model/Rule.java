@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode.Include;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Rule {
     @Include
     private int id;

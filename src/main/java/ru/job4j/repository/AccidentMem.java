@@ -7,6 +7,7 @@ import ru.job4j.model.Accident;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -16,9 +17,12 @@ public class AccidentMem {
     private final AtomicInteger ids = new AtomicInteger(3);
 
     public AccidentMem() {
-        accidents.put(1, new Accident(1, "John Smith", "Description 1", "Address 1"));
-        accidents.put(2, new Accident(2, "Sam Brown", "Description 2", "Address 2"));
-        accidents.put(3, new Accident(3, "Paul Pierce", "Description 3", "Address 3"));
+        accidents.put(1, new Accident(
+                1, "John Smith", "Description 1", "Address 1", new RuleMem().findAll()));
+        accidents.put(2, new Accident(
+                2, "Sam Brown", "Description 2", "Address 2", new RuleMem().findAll()));
+        accidents.put(3, new Accident(
+                3, "Paul Pierce", "Description 3", "Address 3", new RuleMem().findAll()));
     }
 
     public List<Accident> findAll() {

@@ -35,7 +35,7 @@
                 Edit accident
             </div>
             <div class="card-body">
-                <form th:action="@{/updateAccident}" method="POST" enctype="multipart/form-data">
+                <form th:action="@{/updateAccident}" method="POST" >
 				<input type="hidden" name="id" th:value="${accident.id}"/>
                     <div class="form-group">
                         <label for="name">Name</label>

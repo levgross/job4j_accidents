@@ -3,6 +3,7 @@ package ru.job4j.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.model.Accident;
+import ru.job4j.model.AccidentType;
 import ru.job4j.model.Rule;
 import ru.job4j.repository.AccidentMem;
 
@@ -16,13 +17,19 @@ import java.util.Set;
 public class AccidentService {
     private final AccidentMem store;
     private final RuleService ruleService;
+    private final TypeService typeService;
 
     public List<Accident> findAll() {
         return store.findAll();
     }
 
-    public boolean create(Accident accident, String[] ids) {
+    public boolean create(Accident accident, int typeId, String[] ids) {
         Set<Rule> rules = new HashSet<>();
+        Optional<AccidentType> typeOpt = typeService.findById(typeId);
+        if (typeOpt.isEmpty()) {
+            return false;
+        }
+        accident.setType(typeOpt.get());
         for (String id : ids) {
             Optional<Rule> optRule = ruleService.findById(Integer.parseInt(id));
             if (optRule.isEmpty()) {

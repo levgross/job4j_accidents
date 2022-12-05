@@ -5,10 +5,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.model.Accident;
+import ru.job4j.model.AccidentType;
 import ru.job4j.service.AccidentService;
 import ru.job4j.service.RuleService;
+import ru.job4j.service.TypeService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -16,18 +20,21 @@ import java.util.Optional;
 public class AccidentController {
     private final AccidentService accidentService;
     private final RuleService ruleService;
+    private final TypeService typeService;
 
     @GetMapping("/createAccident")
     public String viewCreateAccident(Model model, @RequestParam(name = "fail", required = false) Boolean fail) {
         model.addAttribute("fail", fail != null);
         model.addAttribute("rules", ruleService.findAll());
+        model.addAttribute("types", typeService.findAll());
         return "createAccident";
     }
 
     @PostMapping("/saveAccident")
     public String save(@ModelAttribute Accident accident, HttpServletRequest req) {
-        String[] ids = req.getParameterValues("rIds");
-        if (ids == null || !accidentService.create(accident, ids)) {
+        int typeId = accident.getType().getId();
+        String[] ruleIds = req.getParameterValues("rIds");
+        if (ruleIds == null || !accidentService.create(accident, typeId, ruleIds)) {
             return "redirect:/createAccident?fail=true";
         }
         return "redirect:/index";

@@ -1,13 +1,11 @@
 package ru.job4j.repository;
 
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.job4j.model.Accident;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,9 +27,13 @@ public class AccidentMem {
         return accidents.values().stream().toList();
     }
 
-    public void create(Accident accident) {
+    public boolean create(Accident accident) {
+        if (accidents.containsKey(accident.getId())) {
+            return false;
+        }
         accident.setId(ids.incrementAndGet());
         accidents.put(accident.getId(), accident);
+        return true;
     }
 
     public void update(Accident accident) {

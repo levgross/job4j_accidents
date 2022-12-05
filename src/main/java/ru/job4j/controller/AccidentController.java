@@ -5,15 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.model.Accident;
-import ru.job4j.model.Rule;
 import ru.job4j.service.AccidentService;
 import ru.job4j.service.RuleService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
-
 
 @Controller
 @AllArgsConstructor
@@ -22,7 +18,8 @@ public class AccidentController {
     private final RuleService ruleService;
 
     @GetMapping("/createAccident")
-    public String viewCreateAccident(Model model) {
+    public String viewCreateAccident(Model model, @RequestParam(name = "fail", required = false) Boolean fail) {
+        model.addAttribute("fail", fail != null);
         model.addAttribute("rules", ruleService.findAll());
         return "createAccident";
     }
@@ -30,16 +27,9 @@ public class AccidentController {
     @PostMapping("/saveAccident")
     public String save(@ModelAttribute Accident accident, HttpServletRequest req) {
         String[] ids = req.getParameterValues("rIds");
-        Set<Rule> rules = new HashSet<>();
-        for (String id : ids) {
-            Optional<Rule> optRule = ruleService.findById(Integer.parseInt(id));
-            if (optRule.isEmpty()) {
-                throw new IllegalArgumentException("No such rule registered.");
-            }
-            rules.add(optRule.get());
+        if (ids == null || !accidentService.create(accident, ids)) {
+            return "redirect:/createAccident?fail=true";
         }
-        accident.setRules(rules);
-        accidentService.create(accident);
         return "redirect:/index";
     }
 

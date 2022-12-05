@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.job4j.model.Accident;
 import ru.job4j.model.AccidentType;
 import ru.job4j.model.Rule;
-import ru.job4j.repository.AccidentMem;
+import ru.job4j.repository.AccidentJdbcTemplate;
 
 import java.util.HashSet;
 import java.util.List;
@@ -15,12 +15,12 @@ import java.util.Set;
 @Service
 @AllArgsConstructor
 public class AccidentService {
-    private final AccidentMem store;
+    private final AccidentJdbcTemplate accidentsRepostiory;
     private final RuleService ruleService;
     private final TypeService typeService;
 
     public List<Accident> findAll() {
-        return store.findAll();
+        return accidentsRepostiory.findAll();
     }
 
     public boolean create(Accident accident, int typeId, String[] ids) {
@@ -38,14 +38,15 @@ public class AccidentService {
             rules.add(optRule.get());
         }
         accident.setRules(rules);
-        return store.create(accident);
+        accidentsRepostiory.create(accident);
+        return true;
     }
 
     public void update(Accident accident) {
-        store.update(accident);
+        accidentsRepostiory.update(accident);
     }
 
     public Optional<Accident> findById(int id) {
-        return store.findById(id);
+        return Optional.ofNullable(accidentsRepostiory.findById(id));
     }
 }

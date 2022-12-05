@@ -3,6 +3,7 @@ package ru.job4j.model;
 import lombok.*;
 import lombok.EqualsAndHashCode.Include;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -16,5 +17,5 @@ public class Accident {
     private String text;
     private String address;
     private AccidentType type;
-    private Set<Rule> rules;
+    private Set<Rule> rules = new HashSet<>();
 }

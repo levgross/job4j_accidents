@@ -37,6 +37,7 @@ public class AccidentController {
         if (ruleIds == null || !accidentService.create(accident, typeId, ruleIds)) {
             return "redirect:/createAccident?fail=true";
         }
+        System.out.println(accident);
         return "redirect:/index";
     }
 

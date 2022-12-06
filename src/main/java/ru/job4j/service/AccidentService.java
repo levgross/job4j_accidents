@@ -7,20 +7,17 @@ import ru.job4j.model.AccidentType;
 import ru.job4j.model.Rule;
 import ru.job4j.repository.AccidentJdbcTemplate;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
 public class AccidentService {
-    private final AccidentJdbcTemplate accidentsRepostiory;
+    private final AccidentJdbcTemplate accidentsRepository;
     private final RuleService ruleService;
     private final TypeService typeService;
 
     public List<Accident> findAll() {
-        return accidentsRepostiory.findAll();
+        return accidentsRepository.findAll();
     }
 
     public boolean create(Accident accident, int typeId, String[] ids) {
@@ -28,7 +25,7 @@ public class AccidentService {
         if (accidentOpt.isEmpty()) {
             return false;
         }
-        accidentsRepostiory.create(accidentOpt.get());
+        accidentsRepository.create(accidentOpt.get());
         return true;
     }
 
@@ -37,16 +34,16 @@ public class AccidentService {
         if (accidentOpt.isEmpty()) {
             return false;
         }
-        accidentsRepostiory.update(accidentOpt.get());
+        accidentsRepository.update(accidentOpt.get());
         return true;
     }
 
     public Optional<Accident> findById(int id) {
-        return Optional.ofNullable(accidentsRepostiory.findById(id));
+        return Optional.ofNullable(accidentsRepository.findById(id));
     }
 
     private Optional<Accident> loadTypeAndRules(Accident accident, int typeId, String[] ids) {
-        Set<Rule> rules = new HashSet<>();
+        List<Rule> rules = new ArrayList<>();
         Optional<AccidentType> typeOpt = typeService.findById(typeId);
         if (typeOpt.isEmpty()) {
             return Optional.empty();

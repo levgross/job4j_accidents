@@ -3,17 +3,17 @@ package ru.job4j.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.model.AccidentType;
-import ru.job4j.repository.TypeMem;
+import ru.job4j.repository.TypeJdbcTemplate;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
 public class TypeService {
-    private final TypeMem store;
+    private final TypeJdbcTemplate store;
 
-    public Set<AccidentType> findAll() {
+    public List<AccidentType> findAll() {
         return store.findAll();
     }
 
@@ -21,11 +21,11 @@ public class TypeService {
         store.create(type);
     }
 
-    public void update(AccidentType type) {
-        store.update(type);
-    }
-
     public Optional<AccidentType> findById(int id) {
-        return store.findById(id);
+        AccidentType type = store.findById(id);
+        if (type == null) {
+            return Optional.empty();
+        }
+        return Optional.of(type);
     }
 }

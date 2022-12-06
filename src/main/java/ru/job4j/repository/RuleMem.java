@@ -18,8 +18,8 @@ public class RuleMem {
         rules.put(3, new Rule(3, "Rule. 3"));
     }
 
-    public Set<Rule> findAll() {
-        return new HashSet<>(rules.values());
+    public List<Rule> findAll() {
+        return new ArrayList<>(rules.values());
     }
 
     public void create(Rule rule) {

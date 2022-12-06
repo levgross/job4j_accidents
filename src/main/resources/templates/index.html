@@ -41,6 +41,8 @@
 				<th scope="col">Name</th>
 			    <th scope="col">Description</th>
 				<th scope="col">Address</th>
+				<th scope="col">Type</th>
+				<th scope="col">Rules</th>
             </tr>
             </thead>
             <tbody>
@@ -54,6 +56,10 @@
 				<td th:text="${accident.name}" />
 				<td th:text="${accident.text}" />
 				<td th:text="${accident.address}" />
+				<td th:text="${accident.type.name}" />
+				<td th:each="rule : ${accident.rules}">	
+					<span th:text="${rule.name}"></span>
+				</td>
             </tr>
             </tbody>
         </table>

@@ -37,23 +37,31 @@ public class AccidentController {
         if (!accidentService.create(accident, typeId, ruleIds)) {
             return "redirect:/createAccident?fail=true";
         }
-        System.out.println(accident);
         return "redirect:/index";
     }
 
     @GetMapping("/formUpdateAccident")
-    public String update(Model model, @RequestParam("id") int id) {
+    public String update(Model model,
+                         @RequestParam("id") int id,
+                         @RequestParam(name = "fail", required = false) Boolean fail) {
         Optional<Accident> optAccident = accidentService.findById(id);
         if (optAccident.isEmpty()) {
             return "404";
         }
         model.addAttribute("accident", optAccident.get());
+        model.addAttribute("fail", fail != null);
+        model.addAttribute("rules", ruleService.findAll());
+        model.addAttribute("types", typeService.findAll());
         return "formUpdateAccident";
     }
 
     @PostMapping("/updateAccident")
-    public String update(@ModelAttribute Accident accident) {
-        accidentService.update(accident);
+    public String update(@ModelAttribute Accident accident, HttpServletRequest req) {
+        int typeId = accident.getType().getId();
+        String[] ruleIds = req.getParameterValues("rIds");
+        if (!accidentService.update(accident, typeId, ruleIds)) {
+            return "redirect:/formUpdateAccident?fail=true";
+        }
         return "redirect:/index";
     }
 }

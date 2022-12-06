@@ -14,9 +14,15 @@ public class AccidentJdbcTemplate {
     private final JdbcTemplate jdbc;
     private final TypeService typeService;
 
+    private final static String CREATE = "insert into accident (name, text, address, type_id) "
+            + "values (?, ?, ?, ?)";
+    private final static String UPDATE = "update accident set name = ?, text = ?, address = ?, type_id = ? "
+            + "where id = ?";
+    private final static String FIND_ALL = "select * from accident order by id";
+    private final static String FIND_BY_ID = "select name, text, address, type_id from accident where id = ?";
+
     public Accident create(Accident accident) {
-        jdbc.update("insert into accident (name, text, address, type_id)"
-                        + "values (?, ?, ?, ?)",
+        jdbc.update(CREATE,
                 accident.getName(),
                 accident.getText(),
                 accident.getAddress(),
@@ -26,8 +32,7 @@ public class AccidentJdbcTemplate {
     }
 
     public void update(Accident accident) {
-        jdbc.update("update accident set name = ?, text = ?, address = ?, type_id = ?)"
-                        + "where id = ?",
+        jdbc.update(UPDATE,
                 accident.getName(),
                 accident.getText(),
                 accident.getAddress(),
@@ -38,7 +43,7 @@ public class AccidentJdbcTemplate {
     }
 
     public List<Accident> findAll() {
-        return jdbc.query("select * from accident",
+        return jdbc.query(FIND_ALL,
                 (rs, row) -> {
                     Accident accident = new Accident();
                     accident.setId(rs.getInt("id"));
@@ -51,7 +56,7 @@ public class AccidentJdbcTemplate {
     }
 
     public Accident findById(int id) {
-        return jdbc.queryForObject("select name, text, address, type_id from accident where id = ?",
+        return jdbc.queryForObject(FIND_BY_ID,
                 (rs, row) -> {
                     Accident accident = new Accident();
                     accident.setId(id);

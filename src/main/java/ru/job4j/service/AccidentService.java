@@ -24,29 +24,42 @@ public class AccidentService {
     }
 
     public boolean create(Accident accident, int typeId, String[] ids) {
+        Optional<Accident> accidentOpt = loadTypeAndRules(accident, typeId, ids);
+        if (accidentOpt.isEmpty()) {
+            return false;
+        }
+        accidentsRepostiory.create(accidentOpt.get());
+        return true;
+    }
+
+    public boolean update(Accident accident, int typeId, String[] ids) {
+        Optional<Accident> accidentOpt = loadTypeAndRules(accident, typeId, ids);
+        if (accidentOpt.isEmpty()) {
+            return false;
+        }
+        accidentsRepostiory.update(accidentOpt.get());
+        return true;
+    }
+
+    public Optional<Accident> findById(int id) {
+        return Optional.ofNullable(accidentsRepostiory.findById(id));
+    }
+
+    private Optional<Accident> loadTypeAndRules(Accident accident, int typeId, String[] ids) {
         Set<Rule> rules = new HashSet<>();
         Optional<AccidentType> typeOpt = typeService.findById(typeId);
         if (typeOpt.isEmpty()) {
-            return false;
+            return Optional.empty();
         }
         for (String id : ids) {
             Optional<Rule> optRule = ruleService.findById(Integer.parseInt(id));
             if (optRule.isEmpty()) {
-                return false;
+                return Optional.empty();
             }
             rules.add(optRule.get());
         }
         accident.setType(typeOpt.get());
         accident.setRules(rules);
-        accidentsRepostiory.create(accident);
-        return true;
-    }
-
-    public void update(Accident accident) {
-        accidentsRepostiory.update(accident);
-    }
-
-    public Optional<Accident> findById(int id) {
-        return Optional.ofNullable(accidentsRepostiory.findById(id));
+        return Optional.of(accident);
     }
 }

@@ -34,7 +34,7 @@ public class AccidentController {
     public String save(@ModelAttribute Accident accident, HttpServletRequest req) {
         int typeId = accident.getType().getId();
         String[] ruleIds = req.getParameterValues("rIds");
-        if (ruleIds == null || !accidentService.create(accident, typeId, ruleIds)) {
+        if (!accidentService.create(accident, typeId, ruleIds)) {
             return "redirect:/createAccident?fail=true";
         }
         System.out.println(accident);

@@ -29,7 +29,6 @@ public class AccidentService {
         if (typeOpt.isEmpty()) {
             return false;
         }
-        accident.setType(typeOpt.get());
         for (String id : ids) {
             Optional<Rule> optRule = ruleService.findById(Integer.parseInt(id));
             if (optRule.isEmpty()) {
@@ -37,6 +36,7 @@ public class AccidentService {
             }
             rules.add(optRule.get());
         }
+        accident.setType(typeOpt.get());
         accident.setRules(rules);
         accidentsRepostiory.create(accident);
         return true;

@@ -3,7 +3,7 @@ package ru.job4j.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.model.AccidentType;
-import ru.job4j.repository.TypeJdbcTemplate;
+import ru.job4j.repository.TypeHibernate;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class TypeService {
-    private final TypeJdbcTemplate store;
+    private final TypeHibernate store;
 
     public List<AccidentType> findAll() {
         return store.findAll();

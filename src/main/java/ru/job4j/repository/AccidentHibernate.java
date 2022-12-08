@@ -1,70 +1,44 @@
 package ru.job4j.repository;
 
 import lombok.AllArgsConstructor;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 import ru.job4j.model.Accident;
-import ru.job4j.service.RuleService;
 
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
 @AllArgsConstructor
 public class AccidentHibernate {
-    private final SessionFactory sf;
+    private final CrudRepository crudRepository;
 
     public Accident create(Accident accident) {
-        Session session = sf.openSession();
-        Transaction tx = null;
-        try {
-            tx = session.beginTransaction();
-            session.save(accident);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-                throw e;
-            }
-        } finally {
-            session.close();
-        }
+        crudRepository.run(session ->
+                session.save(accident));
         return accident;
     }
 
     public void update(Accident accident) {
-        Session session = sf.openSession();
-        Transaction tx = null;
-        try {
-            tx = session.beginTransaction();
-            session.update(accident);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-                throw e;
-            }
-        } finally {
-            session.close();
-        }
+        crudRepository.run(session ->
+                session.update(accident));
+    }
+
+    public void delete(int accidentId) {
+        crudRepository.run("delete from Accident where id = :tId",
+                Map.of("tId", accidentId));
     }
 
     public Set<Accident> findAll() {
-        try (Session session = sf.openSession()) {
-            return new HashSet<>(session
-                    .createQuery("from Accident a join fetch a.rules order by a.id", Accident.class)
-                    .list());
-        }
+        return new HashSet<>(crudRepository
+                .query("from Accident a join fetch a.rules order by a.id", Accident.class));
     }
 
-    public Accident findById(int id) {
-        try (Session session = sf.openSession()) {
-            return (Accident) session
-                    .createQuery("from Accident a join fetch a.type join fetch a.rules where a.id = :fId")
-                    .setParameter("fId", id).
-                    getSingleResult();
-        }
+    public Optional<Accident> findById(int id) {
+            return crudRepository
+                    .optional("from Accident a join fetch a.type join fetch a.rules where a.id = :fId",
+                            Accident.class,
+                            Map.of("fId", id));
     }
 }

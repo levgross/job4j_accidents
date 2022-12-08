@@ -14,21 +14,24 @@ import java.util.Set;
 public class RuleService {
     private final RuleHibernate store;
 
+    public Rule create(Rule rule) {
+        return store.create(rule);
+    }
+
+    public void update(Rule rule) {
+        store.update(rule);
+    }
+
+    public void delete(int ruleId) {
+        store.delete(ruleId);
+    }
+
     public List<Rule> findAll() {
         return store.findAll();
     }
 
-    public void create(Rule rule) {
-        store.create(rule);
-    }
-
     public Optional<Rule> findById(int id) {
-        Rule rule = store.findById(id);
-        if (rule == null) {
-            return Optional.empty();
-        }
-
-        return Optional.of(rule);
+        return store.findById(id);
     }
 
     public Set<Rule> findRulesByAccidentId(int accidentId) {

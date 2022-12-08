@@ -41,7 +41,7 @@ public class AccidentService {
     }
 
     public Optional<Accident> findById(int id) {
-        return Optional.ofNullable(accidentsRepository.findById(id));
+        return accidentsRepository.findById(id);
     }
 
     private Optional<Accident> loadTypeAndRules(Accident accident, int typeId, String[] ids) {

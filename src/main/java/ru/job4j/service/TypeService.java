@@ -3,7 +3,7 @@ package ru.job4j.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.model.AccidentType;
-import ru.job4j.repository.TypeHibernate;
+import ru.job4j.repository.AccidentTypeRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,22 +11,22 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class TypeService {
-    private final TypeHibernate store;
+    private final AccidentTypeRepository store;
 
     public AccidentType create(AccidentType type) {
-        return store.create(type);
+        return store.save(type);
     }
 
     public void update(AccidentType type) {
-        store.update(type);
+        store.save(type);
     }
 
-    public void delete(int typeId) {
-        store.delete(typeId);
+    public void delete(AccidentType type) {
+        store.delete(type);
     }
 
     public List<AccidentType> findAll() {
-        return store.findAll();
+        return (List<AccidentType>) store.findAll();
     }
 
     public Optional<AccidentType> findById(int id) {

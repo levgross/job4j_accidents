@@ -1,5 +1,6 @@
 package ru.job4j.repository;
 
+import org.apache.tomcat.util.digester.Rules;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,13 +14,13 @@ import ru.job4j.service.TypeService;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.List;
 
 @Repository
 public class AccidentJdbcTemplate {
     private final JdbcTemplate jdbc;
     private final TypeService typeService;
-    private final RuleService ruleService;
 
     private final static String CREATE = "insert into accident (name, text, address, type_id) "
             + "values (?, ?, ?, ?)";
@@ -30,11 +31,13 @@ public class AccidentJdbcTemplate {
             + "where id = ?";
     private final static String FIND_ALL = "select * from accident order by id";
     private final static String FIND_BY_ID = "select * from accident where id = ?";
+    private final static String FIND_RULES_BY_ACCIDENT_ID = "select ar.accident_id, ar.rule_id, r.name from accident_rule ar"
+            + " join rule r on ar.rule_id = r.id where ar.accident_id = ?";
+
 
     public AccidentJdbcTemplate(JdbcTemplate jdbc, TypeService typeService, RuleService ruleService) {
         this.jdbc = jdbc;
         this.typeService = typeService;
-        this.ruleService = ruleService;
     }
 
     public Accident create(Accident accident) {
@@ -84,6 +87,16 @@ public class AccidentJdbcTemplate {
         }
     }
 
+    private List<Rule> findRulesByAccidentId(int accidentId) {
+        return jdbc.query(FIND_RULES_BY_ACCIDENT_ID,
+                (rs, row) -> {
+                    Rule rule = new Rule();
+                    rule.setId(rs.getInt("rule_id"));
+                    rule.setName(rs.getString("name"));
+                    return rule;
+                }, accidentId);
+    }
+
     private class AccidentMapper implements RowMapper<Accident> {
         @Override
         public Accident mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -93,7 +106,7 @@ public class AccidentJdbcTemplate {
             accident.setText(rs.getString("text"));
             accident.setAddress(rs.getString("address"));
             accident.setType(typeService.findById(rs.getInt("type_id")).get());
-            accident.setRules(ruleService.findRulesByAccidentId(accident.getId()));
+            accident.setRules(new HashSet<>(findRulesByAccidentId(accident.getId())));
             return accident;
         }
     }

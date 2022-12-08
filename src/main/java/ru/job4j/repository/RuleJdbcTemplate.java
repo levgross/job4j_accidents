@@ -15,8 +15,7 @@ public class RuleJdbcTemplate {
     private final static String CREATE = "insert into rule (name) values (?)";
     private final static String FIND_ALL = "select * from rule order by id";
     private final static String FIND_BY_ID = "select name from rule where id = ?";
-    private final static String FIND_BY_ACCIDENT_ID = "select ar.accident_id, ar.rule_id, r.name from accident_rule ar"
-            + " join rule r on ar.rule_id = r.id where ar.accident_id = ?";
+
 
     public Rule create(Rule rule) {
         jdbc.update(CREATE,
@@ -43,15 +42,5 @@ public class RuleJdbcTemplate {
                     rule.setName(rs.getString("name"));
                     return rule;
                 }, id);
-    }
-
-    public List<Rule> findRulesByAccidentId(int accidentId) {
-        return jdbc.query(FIND_BY_ACCIDENT_ID,
-                (rs, row) -> {
-                    Rule rule = new Rule();
-                    rule.setId(rs.getInt("rule_id"));
-                    rule.setName(rs.getString("name"));
-                    return rule;
-                }, accidentId);
     }
 }

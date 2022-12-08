@@ -3,38 +3,33 @@ package ru.job4j.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.model.Rule;
-import ru.job4j.repository.RuleHibernate;
+import ru.job4j.repository.RuleRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
 public class RuleService {
-    private final RuleHibernate store;
+    private final RuleRepository store;
 
     public Rule create(Rule rule) {
-        return store.create(rule);
+        return store.save(rule);
     }
 
     public void update(Rule rule) {
-        store.update(rule);
+        store.save(rule);
     }
 
-    public void delete(int ruleId) {
-        store.delete(ruleId);
+    public void delete(Rule rule) {
+        store.delete(rule);
     }
 
     public List<Rule> findAll() {
-        return store.findAll();
+        return (List<Rule>) store.findAll();
     }
 
     public Optional<Rule> findById(int id) {
         return store.findById(id);
-    }
-
-    public Set<Rule> findRulesByAccidentId(int accidentId) {
-        return store.findRulesByAccidentId(accidentId);
     }
 }

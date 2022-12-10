@@ -7,9 +7,7 @@ import lombok.EqualsAndHashCode.Include;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -18,6 +16,14 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "accident")
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "accident-entity-graph",
+                attributeNodes = {
+                        @NamedAttributeNode(value = "rules")
+                }
+        )
+})
 public class Accident {
     @Include
     @Id

@@ -1,6 +1,5 @@
 package ru.job4j.controller;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,7 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-@Disabled
 @SpringBootTest(classes = Main.class)
 @AutoConfigureMockMvc
 class AccidentControllerTest {
@@ -32,9 +30,20 @@ class AccidentControllerTest {
 
     @Test
     @WithMockUser
-    void update() throws Exception {
+    void whenUpdateExistingAccident() throws Exception {
         this.mockMvc.perform(get("/formUpdateAccident")
                         .param("id", String.valueOf(1))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("formUpdateAccident"));
+    }
+
+    @Test
+    @WithMockUser
+    void whenUpdateNotExistingAccident() throws Exception {
+        this.mockMvc.perform(get("/formUpdateAccident")
+                        .param("id", String.valueOf(-1))
                 )
                 .andDo(print())
                 .andExpect(status().isOk())

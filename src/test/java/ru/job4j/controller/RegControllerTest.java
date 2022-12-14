@@ -12,9 +12,9 @@ import ru.job4j.Main;
 import ru.job4j.model.User;
 import ru.job4j.service.UserService;
 
-
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -42,6 +42,8 @@ class RegControllerTest {
     @Test
     @WithMockUser
     public void whenRegUserThenReturnDefaultMessage() throws Exception {
+        User user = new User();
+        when(userService.create(user)).thenReturn(true);
         this.mockMvc.perform(post("/reg")
                         .param("username", "Name")
                         .param("password", "123456"))

@@ -11,23 +11,23 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.job4j.model.User;
-import ru.job4j.repository.AuthorityRepository;
-import ru.job4j.repository.UserRepository;
+import ru.job4j.service.AuthorityService;
+import ru.job4j.service.UserService;
 
 @Controller
 @AllArgsConstructor
 public class RegController {
     private final PasswordEncoder encoder;
-    private final UserRepository users;
-    private final AuthorityRepository authorities;
+    private final UserService userService;
+    private final AuthorityService authorityService;
 
     @PostMapping("/reg")
     public String regSave(@ModelAttribute User user) {
         try {
             user.setEnabled(true);
             user.setPassword(encoder.encode(user.getPassword()));
-            user.setAuthority(authorities.findByAuthority("ROLE_USER"));
-            users.save(user);
+            user.setAuthority(authorityService.findByAuthority("ROLE_USER"));
+            userService.create(user);
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             return "redirect:/reg?error=true";
